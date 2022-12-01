@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} noTestfrm 
    Caption         =   "UserForm1"
-   ClientHeight    =   2050
-   ClientLeft      =   72
+   ClientHeight    =   5175
+   ClientLeft      =   78
    ClientTop       =   240
-   ClientWidth     =   2880
+   ClientWidth     =   7380
    OleObjectBlob   =   "noTestfrm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

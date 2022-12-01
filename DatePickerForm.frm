@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} DatePickerForm 
    Caption         =   "Date picker"
-   ClientHeight    =   2030
+   ClientHeight    =   4215
    ClientLeft      =   0
    ClientTop       =   150
-   ClientWidth     =   1608
+   ClientWidth     =   3468
    OleObjectBlob   =   "DatePickerForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

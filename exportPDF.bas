@@ -43,3 +43,44 @@ Sub exportPDFByWeek(ByVal startDate As Date, endDate As Date)
 End Sub
 
 
+Sub exportPDFMissing(ByVal startDate As Date, endDate As Date)
+    Dim execute_str  As String
+    Dim startDateStr As String, endDateStr As String
+    
+    
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    
+    If Not IsNull(startDate) And Not IsNull(endDate) Then
+        startDateStr = format(startDate, "MM/DD/YYYY")
+        endDateStr = format(endDate, "MM/DD/YYYY")
+    End If
+
+    execute_str = "pdfReport -csv --start " & startDateStr & " --end  " & endDateStr & " --missing"
+    
+    Call run_exe.run_exe(execute_str)
+    
+    
+End Sub
+
+Sub exportPDFEmp(ByVal startDate As Date, endDate As Date, empID As String)
+    Dim execute_str  As String
+    Dim startDateStr As String, endDateStr As String
+    
+    
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    
+    If Not IsNull(startDate) And Not IsNull(endDate) Then
+        startDateStr = format(startDate, "MM/DD/YYYY")
+        endDateStr = format(endDate, "MM/DD/YYYY")
+    End If
+
+    execute_str = "pdfReport -csv --start " & startDateStr & " --end  " & endDateStr & " --empID " & empID
+    
+    Call run_exe.run_exe(execute_str)
+    
+    
+End Sub
+
+

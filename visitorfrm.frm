@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} visitorfrm 
    Caption         =   "UserForm1"
-   ClientHeight    =   1810
-   ClientLeft      =   42
-   ClientTop       =   210
-   ClientWidth     =   3378
+   ClientHeight    =   5160
+   ClientLeft      =   48
+   ClientTop       =   216
+   ClientWidth     =   8532.001
    OleObjectBlob   =   "visitorfrm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -78,3 +78,35 @@ Unload Me
 
 End Sub
 
+Private Sub visitorName_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+                    Dim visitor_arr As Variant
+                    Dim lookup_str  As String
+                    Dim wb_path As String
+                    Dim v_wb As Workbook, v_sht As Worksheet, v_rng As Range
+                    Dim dob As Variant, name As Variant, dob_str As String, name_str As String
+                    
+                    Application.ScreenUpdating = False
+                    
+                 If Len(Me.visitorName.value) > 1 And KeyCode = 13 Then
+                        wb_path = Environ("USERPROFILE") & "\Covid_Testing" & "\most_common_visitor.xlsx"
+                        Set v_wb = Workbooks.Open(filename:=wb_path)
+                        Set v_sht = v_wb.Sheets(1)
+                        Set v_rng = v_sht.UsedRange
+                        lookup_str = UCase(Me.visitorName.value)
+                        dob = Application.VLookup(lookup_str, v_rng, 4, False)
+                        name = Application.VLookup(lookup_str, v_rng, 3, False)
+                        
+                        If IsError(dob) Then
+                            v_wb.Close savechanges:=False
+                            Exit Sub
+                        End If
+                        
+                        dob_str = format(CDate(dob), "mm/dd/yyyy")
+                        name_str = CStr(name)
+                        visitorName.value = name_str
+                        birthday.value = dob_str
+                        
+                        v_wb.Close savechanges:=False
+                End If
+                
+End Sub

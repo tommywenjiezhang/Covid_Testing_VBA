@@ -199,7 +199,7 @@ Sub refreshNoTest()
             
             If Not IsError(lookup_result) Then
                 If CDate(lookup_result) >= Date Then
-                    With Sheets("EMPLOYEE")
+                    With empList
                         .Range("A" & idx & ":D" & idx).Interior.color = RGB(255, 0, 0)
                     End With
                 End If
@@ -213,11 +213,12 @@ End Sub
 
 Sub Import_test_main()
     importTest
-    Call refreshRoster.refreshRoster
     importNoTestList
-    refreshNoTest
+    Call refreshRoster.refreshRoster
+    
     Call refreshRoster.importBirthday
     Call refreshRoster.importVaccine
     Call refreshRoster.lookupVaccine
     populate_testing
+    refreshNoTest
 End Sub

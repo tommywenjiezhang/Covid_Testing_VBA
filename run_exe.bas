@@ -9,4 +9,3 @@ Sub run_exe(exe_str As String)
         Debug.Print execute_str
         obj = Shell(execute_str, vbMinimizedFocus)
 End Sub
-

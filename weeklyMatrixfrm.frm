@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} weeklyMatrixfrm 
    Caption         =   "Missing Test List"
-   ClientHeight    =   6630
+   ClientHeight    =   6624
    ClientLeft      =   180
-   ClientTop       =   810
+   ClientTop       =   816
    ClientWidth     =   8460.001
    OleObjectBlob   =   "weeklyMatrixfrm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -55,8 +55,7 @@ Private Sub getReport(ByVal startDateStr As String, endDateStr As String)
      If Not IsError(CDate(startDateStr)) And Not IsError(CDate(endDateStr)) Then
         startDate = CDate(startDateStr)
         endDate = CDate(endDateStr)
-        
-        getData endDate, startDate, CStr(Me.testTypecbo.value)
+        Call exportPDF.exportPDFMissing(startDate, endDate)
         
     End If
     
@@ -128,7 +127,7 @@ Private Sub getData(ByVal endDate As Date, ByVal startDate As Date, ByVal typeOf
                 .Range("B1").value = "Vaccination Record"
                 .Range("C1").value = "Most Recent Test"
                 .Cells(1, 4).value = "Test"
-                .Cells(1, 5).value = "frequency"
+                .Cells(1, 5).value = "Frequency"
                 copy_rng.Copy
                 .Range("A2").PasteSpecial xlPasteValues
                 vaccine_copy_rng.Copy Destination:=.Range("B2")
@@ -150,9 +149,8 @@ Private Sub getData(ByVal endDate As Date, ByVal startDate As Date, ByVal typeOf
                                 If Not IsError(weekly_lookup) Then
                                     .Cells(s, 5).value = weekly_lookup
                                     If CInt(weekly_lookup) <= 1 Then
-                                        If .Cells(s, 2).value = "No Vaccine" And .Cells(s, 4).value = "RAPID" Then
-                                            .Cells(s, 5).Interior.color = vbMagenta
-                                        End If
+                                        
+                                     .Cells(s, 5).Interior.color = vbMagenta
                                     End If
                                 End If
                         End If

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} pivotReport 
    Caption         =   "Testing Summary Report"
-   ClientHeight    =   5148
-   ClientLeft      =   342
+   ClientHeight    =   5145
+   ClientLeft      =   348
    ClientTop       =   1410
-   ClientWidth     =   15768
+   ClientWidth     =   15762
    OleObjectBlob   =   "pivotReport.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -25,7 +25,7 @@ Private Sub btnSumit_Click()
     Dim endDateStr As String
     Dim startDate As Date, endDate As Date
     
-    
+    Application.ScreenUpdating = False
     If Not Me.endDateTxt.value = "" And Not Me.startDateTxt.value = "" Then
         startDateStr = validationHelper.birthdayExtract(Me.startDateTxt.value)
         endDateStr = validationHelper.birthdayExtract(Me.endDateTxt.value)
@@ -196,7 +196,7 @@ Private Sub createPivotTable(ByRef wb As Workbook)
     
     With pvt.PivotFields("TestDate")
         .Orientation = xlRowField
-        .DataRange.Cells(2).Group start:=True, End:=True, by:=7, _
+        .DataRange.Cells(2).Group start:=True, End:=True, BY:=7, _
         Periods:=Array(False, False, False, True, False, False, False)
         .Position = 2
     End With

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} testForm 
    Caption         =   "UserForm1"
-   ClientHeight    =   1910
-   ClientLeft      =   42
-   ClientTop       =   210
-   ClientWidth     =   2820
+   ClientHeight    =   4944
+   ClientLeft      =   48
+   ClientTop       =   216
+   ClientWidth     =   6900
    OleObjectBlob   =   "testForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -33,7 +33,7 @@ Private Sub checkIn_Click()
     empID = empList.Range("A" & ActiveCell.Row).value
     
     
-    name = ActiveCell.value
+    name = empList.Range("B" & ActiveCell.Row).value
     With testRoster
             lastRow = .Cells(.Rows.Count, "A").End(xlUp).Row + 1
             .Range("A" & lastRow & ":Q" & .Rows.Count).ClearContents
@@ -49,21 +49,21 @@ Private Sub checkIn_Click()
         On Error GoTo wrong_dob
         dobStr = validationHelper.birthdayExtract(testForm.dobTxt.value)
         dobDate = CDate(dobStr)
-        db.updateBirthday dobDate, Trim(ActiveCell.value)
+        db.updateBirthday dobDate, Trim(name)
     End If
 
     
     If testForm.rapidTest.value = True And testForm.pcrChk = True Then
         db.insertTesting empID, name, Now, testForm.symptomChk.value, "RAPID"
         db.insertTesting empID, name, Now, testForm.symptomChk.value, "PCR"
-        insertTest lastRow, "RAPID", empID, hasSymptom, dobDate
-        insertTest (lastRow + 1), "PCR", empID, hasSymptom, dobDate
+        insertTest lastRow, "RAPID", empID, name, hasSymptom, dobDate
+        insertTest (lastRow + 1), "PCR", empID, name, hasSymptom, dobDate
     ElseIf testForm.pcrChk.value = True Then
         db.insertTesting empID, name, Now, testForm.symptomChk.value, "PCR"
-        insertTest lastRow, "PCR", empID, hasSymptom, dobDate
+        insertTest lastRow, "PCR", empID, name, hasSymptom, dobDate
     ElseIf testForm.rapidTest.value = True Then
         db.insertTesting empID, name, Now, testForm.symptomChk.value, "RAPID"
-        insertTest lastRow, "RAPID", empID, hasSymptom, dobDate
+        insertTest lastRow, "RAPID", empID, name, hasSymptom, dobDate
     End If
     
     testRoster.Cells.EntireColumn.AutoFit
@@ -84,11 +84,11 @@ wrong_dob:
     
 End Sub
 
-Private Sub insertTest(ByVal lastRow As Long, testType As String, empID As String, hasSymptom As String, dobDate As Date)
+Private Sub insertTest(ByVal lastRow As Long, testType As String, empID As String, empName As String, hasSymptom As String, dobDate As Date)
     
         With testRoster
                 .Cells(lastRow, "A").value = empID
-                .Cells(lastRow, "B").value = ActiveCell.value
+                .Cells(lastRow, "B").value = empName
                 .Cells(lastRow, "C").value = Now
                 .Cells(lastRow, "C").NumberFormat = "hh:mm:ss AM/PM"
                 .Range("D" & lastRow).value = hasSymptom
@@ -124,9 +124,11 @@ End Sub
 
 Private Sub UserForm_Initialize()
     Dim empID As String
+    Dim name As String
     empID = empList.Range("A" & ActiveCell.Row).value
-
-    Me.empNameLal.Caption = "Testing for: " & ActiveCell.value & " : " & empID
+    name = empList.Range("B" & ActiveCell.Row).value
+    
+    Me.empNameLal.Caption = "Testing for: " & name & " : " & empID
     
     On Error Resume Next
     populate_birthday

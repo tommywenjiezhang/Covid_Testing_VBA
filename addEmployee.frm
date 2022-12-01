@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} addEmployee 
    Caption         =   "Add Employee"
-   ClientHeight    =   1800
-   ClientLeft      =   42
-   ClientTop       =   210
-   ClientWidth     =   2376
+   ClientHeight    =   4332
+   ClientLeft      =   48
+   ClientTop       =   216
+   ClientWidth     =   5148
    OleObjectBlob   =   "addEmployee.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -41,7 +41,7 @@ Private Sub addNameBtn_Click()
         lastName = Me.lastNameTxt.value
         fullName = UCase(lastName) & "," & UCase(firstName)
         first_initial = UCase(Left(Me.lastNameTxt.value, 1))
-        index = generateIndex.generateIndex(first_initial) + 1
+        index = generateIndex.generateIndex(first_initial)
         empID = first_initial & CStr(index)
         
         If Not Me.dobTxt.value = "" Then
@@ -49,9 +49,7 @@ Private Sub addNameBtn_Click()
             dobDate = CDate(dobtext)
             db.insertEmpName fullName, empID, dobDate
         Else
-        
             db.insertEmpName fullName, empID
-        
         End If
         last_row = empList.Cells(empList.Rows.Count, 1).End(xlUp).Offset(1, 0).Row
         empList.Cells(last_row, 2).value = UCase(lastName) & "," & UCase(firstName)
@@ -62,15 +60,7 @@ Private Sub addNameBtn_Click()
     End If
     
     
-    
-    
-    
-    
-    
-    
-   
-    
-  
+
     
     
 End Sub
@@ -82,7 +72,7 @@ End Sub
 Private Sub lastNameTxt_Change()
     Dim index As Long
     first_initial = UCase(Left(Me.lastNameTxt.value, 1))
-    index = generateIndex.generateIndex(first_initial) + 1
+    index = generateIndex.generateIndex(first_initial)
     empID = first_initial & CStr(index)
     With Me.newEmpID
     .Caption = "New Employee ID: " & first_initial & CStr(index)

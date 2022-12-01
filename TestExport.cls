@@ -100,7 +100,7 @@ Public Sub exportFile()
         End With
     
     
-        new_wb.Close SaveChanges:=True
+        new_wb.Close savechanges:=True
     Else
         Set new_wb = Workbooks.Open(Me.full_path & exportFileName)
         With new_wb.Sheets(1)
@@ -111,7 +111,7 @@ Public Sub exportFile()
             .Columns("A:C").AutoFit
     
         End With
-        new_wb.Close SaveChanges:=True
+        new_wb.Close savechanges:=True
     End If
     
 End Sub

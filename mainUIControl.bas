@@ -16,7 +16,7 @@ Sub btns_onAction(control As IRibbonControl)
         Case "testing_history_button"
             Call getTesting.getTestingByEmp
         Case "testing_report"
-            Call generateEmpReport.generateReport
+            empQryfrm.Show
         Case "new_employee"
             Call newEmployee.new_employee
         Case "weekly_report_btn"
@@ -29,5 +29,7 @@ Sub btns_onAction(control As IRibbonControl)
             Call notest_mod.add_no_test
         Case "updateVaccine"
             Call refreshRoster.updateVaccine
+        Case "missingTest"
+            Call weeklyMatrixfrm.Show
     End Select
 End Sub

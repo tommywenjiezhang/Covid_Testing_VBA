@@ -295,11 +295,11 @@ Public Function getTestedByEmp(empName As String, Optional ByVal typeOfTest As S
     
     If Not typeOfTest = "" Then
     
-    query = "Select empName, timeTested, typeOfTest from Testing where empName like '" & empName & "' and typeOfTest like" & _
+    query = "Select empName, timeTested, typeOfTest,  result from Testing where empName like '" & empName & "' and typeOfTest like" & _
     "'" & typeOfTest & "'" & "order by timeTested desc"
     
     Else
-        query = "Select empName, timeTested, typeOfTest from Testing where empName like '" & empName & "'order by timeTested desc"
+        query = "Select empName, timeTested, typeOfTest, result from Testing where empName like '" & empName & "'order by timeTested desc"
     End If
     
     conn.Open dbPath
@@ -513,16 +513,20 @@ Public Function getWeeklyMissingTest(Optional typeOfTest As String = "", Optiona
     
     Else
      
-        query = "SELECT empList.empID, empList.empName, DateDiff ('yyyy', empList.DOB,now()) as age, t.timeTested, v.type_of_vac FROM (empList" & _
-                        " LEFT JOIN (Select * from Testing where Testing.timeTested Between " & _
-                        format(startDate, "\#yyyy-mm-dd\#") & _
-                        " and " & _
-                        format(endDate, "\#yyyy-mm-dd\#") & _
-                        " and typeOfTest Like " & _
-                        "'" & typeOfTest & "') t" & _
-                        " on empList.empID = t.empID) left join (select empID, min(vaccine_type) as type_of_vac FROM vaccinate" & _
-                        " group by empID) as v on" & _
-                        " empList.empID = v.empID order by empList.empName"
+        query = "SELECT Testing.empName, Max(Testing.timeTested) as most_recent_test, Testing.typeOfTest" & _
+                " FROM (SELECT empList.empID, empList.empName, t.timeTested" & _
+                " FROM empList LEFT JOIN (Select * from Testing" & _
+                " where Testing.timeTested Between " & _
+                format(startDate, "\#yyyy-mm-dd\#") & _
+                " And " & _
+                format(endDate, "\#yyyy-mm-dd\#") & _
+                " and typeOfTest Like " & _
+                "'" & typeOfTest & "') t" & _
+                " on empList.empID = t.empID where typeOfTest is null)  AS m" & _
+                " inner join testing on m.empID = Testing.empID group by Testing.empName, Testing.typeOfTest" & _
+                " having typeOfTest like " & _
+                "'" & typeOfTest & "' " & _
+                "order by  Max(Testing.timeTested) desc, Testing.empName asc"
     
     End If
     

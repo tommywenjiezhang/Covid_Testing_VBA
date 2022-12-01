@@ -10,7 +10,7 @@ Sub checkIn()
         MsgBox "No Person selected exiting........."
         Exit Sub
     Else
-        If Not (util.InRange(ActiveCell, empList.Range("B2:B1000"))) Then
+        If Not (util.InRange(ActiveCell, empList.Range("A2:B1000"))) Then
             MsgBox "Selecting Wrong Area please select under empolyee name........."
             Exit Sub
         Else

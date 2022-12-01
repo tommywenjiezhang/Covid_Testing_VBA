@@ -9,15 +9,19 @@ End Sub
 
 Sub updateTestResult()
     Dim db As New testDb
+    Dim pos_arr() As Variant, pos_count As Long
     
     Dim lastRow As Long
     Dim idx As Long
     Dim empID As String
     Dim result As String
+    Dim pos_exe_str As String
     
     Dim message As String
     With testRoster
         lastRow = .Cells(.Rows.Count, 1).End(xlUp).Row
+        pos_count = 0
+        ReDim Preserve pos_arr(pos_count)
         For idx = 3 To lastRow
             If IsEmpty(.Cells(idx, "G")) Then
                 .Cells(idx, "G").Interior.color = RGB(255, 255, 102)
@@ -25,18 +29,21 @@ Sub updateTestResult()
             Else
                 If Not IsEmpty(.Cells(idx, "E")) Then
                     empID = Trim(.Cells(idx, 1).value)
-                    If IsvalidDate(.Cells(idx, 3)) Then
-                        result = UCase(Left(.Cells(idx, "G").value, 1))
-                        db.updateTestResult empID, Now, "RAPID", result
-                        db.updateTestResult empID, Now, "PCR", result
-                        db.updateTestResult empID, Now, .Cells(idx, "E").value, result
-                    Else
-                          .Cells(idx, "G").Interior.color = RGB(255, 0, 0)
-                          .Cells(idx, "G").value = "Not Today"
+                   
+                    result = UCase(Left(.Cells(idx, "G").value, 1))
+                    If UCase(result) = "P" Then
+                        ReDim Preserve pos_arr(0 To pos_count)
+                        pos_arr(pos_count) = empID
+                        pos_count = pos_count + 1
+                        
+                    End If
+            
                     End If
                 End If
-            End If
         Next idx
+        pos_exe_str = Join(pos_arr, ",")
+        Call run_exe.run_exe("update_test.exe " & "--update --l " & pos_exe_str)
+        
     End With
     
     If Not message = "" Then
