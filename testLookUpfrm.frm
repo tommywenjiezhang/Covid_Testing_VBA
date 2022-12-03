@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} testLookUpfrm 
    Caption         =   "Test Lookup"
-   ClientHeight    =   1305
+   ClientHeight    =   1308
    ClientLeft      =   48
    ClientTop       =   210
    ClientWidth     =   1980

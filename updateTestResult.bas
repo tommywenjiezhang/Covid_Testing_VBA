@@ -42,7 +42,8 @@ Sub updateTestResult()
                 End If
         Next idx
         pos_exe_str = Join(pos_arr, ",")
-        Call run_exe.run_exe("update_test.exe " & "--update --l " & pos_exe_str)
+        Debug.Print "update_test.exe " & "--update --l " & pos_exe_str & updateVisitorTesting()
+        Call run_exe.run_exe("update_test.exe " & "--update --l " & pos_exe_str & updateVisitorTesting())
         
     End With
     
@@ -52,6 +53,38 @@ Sub updateTestResult()
     End If
     
 End Sub
+
+
+Function updateVisitorTesting() As String
+    Dim visitorName As String, exe_str As String, last_row As Long, pos_count As Long
+    Dim pos_arr() As Variant
+
+    With visitorTesting
+        lastRow = .Cells(.Rows.Count, 1).End(xlUp).Row
+        pos_count = 0
+        ReDim Preserve pos_arr(pos_count)
+        For idx = 3 To lastRow
+            If IsEmpty(.Cells(idx, "F")) Then
+                .Cells(idx, "F").Interior.color = RGB(255, 255, 102)
+                message = "Some result not filled, please fill out the result and export again"
+            Else
+                If Not IsEmpty(.Cells(idx, "F")) Then
+                    visitorName = Trim(.Cells(idx, 1).value)
+                   
+                    result = UCase(Left(.Cells(idx, "F").value, 1))
+                    If UCase(result) = "P" Then
+                        ReDim Preserve pos_arr(0 To pos_count)
+                        pos_arr(pos_count) = visitorName
+                        pos_count = pos_count + 1
+                    End If
+            
+                    End If
+                End If
+        Next idx
+        exe_str = " --visitor " & Join(pos_arr, "|")
+        updateVisitorTesting = exe_str
+    End With
+End Function
 
 Function IsvalidDate(ByVal datestr As String) As Boolean
         If Not IsError(CDate(datestr)) _

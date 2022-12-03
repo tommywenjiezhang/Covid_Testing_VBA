@@ -78,6 +78,10 @@ Unload Me
 
 End Sub
 
+Private Sub UserForm_Click()
+
+End Sub
+
 Private Sub visitorName_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
                     Dim visitor_arr As Variant
                     Dim lookup_str  As String
