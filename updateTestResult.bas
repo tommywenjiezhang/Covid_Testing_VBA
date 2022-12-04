@@ -43,7 +43,7 @@ Sub updateTestResult()
         Next idx
         pos_exe_str = Join(pos_arr, ",")
         Debug.Print "update_test.exe " & "--update --l " & pos_exe_str & updateVisitorTesting()
-        Call run_exe.run_exe("update_test.exe " & "--update --l " & pos_exe_str & updateVisitorTesting())
+        Call run_exe.run_exe("update_test.exe " & "--update --l " & pos_exe_str & "--visitor" & updateVisitorTesting())
         
     End With
     
@@ -81,8 +81,8 @@ Function updateVisitorTesting() As String
                     End If
                 End If
         Next idx
-        exe_str = " --visitor " & Join(pos_arr, "|")
-        updateVisitorTesting = exe_str
+        exe_str = Join(pos_arr, "|")
+        updateVisitorTesting = Chr(34) & exe_str & Chr(34)
     End With
 End Function
 

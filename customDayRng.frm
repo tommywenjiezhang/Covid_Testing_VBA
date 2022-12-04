@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Private Sub addTestDatebtn_Click()
     Dim testDateStr As String
     Dim testDate As Date
@@ -32,6 +33,15 @@ Private Sub addTestDatebtn_Click()
     End If
 End Sub
 
+
+
+Private Sub BTN_MoveSelectedLeft_Click()
+    Call moveSigle(Me.colLstBox, Me.rowLstbox)
+End Sub
+
+Private Sub BTN_MoveSelectedRight_Click()
+    Call moveSigle(Me.rowLstbox, Me.colLstBox)
+End Sub
 
 
 Private Sub dateLstBox_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
@@ -70,9 +80,48 @@ End Sub
 
 
 
+Function getLstboxvalue(xlstBox As Object) As String
+
+
+    Size = Me.dateLstBox.ListCount - 1
+    ReDim ListBoxContents(0 To Size) As String
+    
+    Dim I As Integer
+
+    For I = 0 To Size
+        ListBoxContents(I) = xlstBox.List(I)
+    Next I
+    
+    return_str = Join(ListBoxContents, ",")
+    getLstboxvalue = return_str
+End Function
+
 
 Private Sub quitBtn_Click()
     Unload Me
+End Sub
+
+Private Sub reportTypeCbo_Change()
+    If Me.reportTypeCbo.value = "Custom Report" Then
+        With Me.MultiPage1
+         .Pages(1).Visible = True
+        .value = 1
+        End With
+        
+        With Me.rowLstbox
+            .AddItem "empID"
+            .AddItem "empName"
+            .AddItem "DOB"
+        End With
+        
+        With Me.colLstBox
+            .AddItem "timeTested"
+            .AddItem "typeOfTest"
+            .AddItem "result"
+        End With
+         Me.rowLstbox.MultiSelect = fmMultiSelectMulti
+        Me.colLstBox.MultiSelect = fmMultiSelectMulti
+    End If
 End Sub
 
 Private Sub submitBtn_Click()
@@ -82,11 +131,11 @@ Private Sub submitBtn_Click()
     Size = Me.dateLstBox.ListCount - 1
     ReDim ListBoxContents(0 To Size) As String
     
-    Dim i As Integer
+    Dim I As Integer
 
-    For i = 0 To Size
-        ListBoxContents(i) = Me.dateLstBox.List(i)
-    Next i
+    For I = 0 To Size
+        ListBoxContents(I) = Me.dateLstBox.List(I)
+    Next I
     
     day_rng_str = Join(ListBoxContents, ",")
     
@@ -95,6 +144,16 @@ Private Sub submitBtn_Click()
         Select Case Me.reportTypeCbo.value
             Case "By Employees"
                 exe_str = "custom_reports  --date " & Chr(34) & day_rng_str & Chr(34) & " --report_type " & "EMP_BY_DAY"
+                Debug.Print exe_str
+            Case "Custom Report"
+                Dim rows_str As String
+                Dim col_str As String
+                
+                row_str = " --rows " & getLstboxvalue(Me.rowLstbox)
+                col_str = " --columns " & getLstboxvalue(Me.colLstBox)
+                
+                exe_str = "custom_reports  --date " & Chr(34) & day_rng_str & Chr(34) & " --report_type " & "CUSTOM"
+                exe_str = exe_str + row_str + col_str
                 Debug.Print exe_str
                 
                 
@@ -108,10 +167,26 @@ Private Sub submitBtn_Click()
 End Sub
 
 
+Sub moveSigle(xListBox1 As Object, xListBox2 As Object)
+    Dim I As Long
+    For I = 0 To xListBox1.ListCount - 1
+        If I = xListBox1.ListCount Then Exit Sub
+        If xListBox1.Selected(I) = True Then
+            xListBox2.AddItem xListBox1.List(I)
+            xListBox1.RemoveItem I
+            I = I - 1
+        End If
+    Next
+End Sub
+
 
 Private Sub UserForm_Initialize()
     With Me.reportTypeCbo
             .AddItem "By Employees"
             .AddItem "By Department"
+            .AddItem "Custom Report"
+    End With
+    With Me.MultiPage1
+        .Pages(1).Visible = False
     End With
 End Sub
