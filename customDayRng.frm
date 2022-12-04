@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} customDayRng 
-   Caption         =   "UserForm1"
+   Caption         =   "Report Builder"
    ClientHeight    =   7032
    ClientLeft      =   108
    ClientTop       =   456
@@ -44,9 +44,15 @@ Private Sub BTN_MoveSelectedRight_Click()
 End Sub
 
 
-Private Sub dateLstBox_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+
+
+Private Sub colLstBox_KeyDown(ByVal keycode As MSForms.ReturnInteger, ByVal Shift As Integer)
+            removeItemFromLst Me.colLstBox, keycode
+End Sub
+
+Private Sub dateLstBox_KeyDown(ByVal keycode As MSForms.ReturnInteger, ByVal Shift As Integer)
     Dim x As Integer
-       If KeyCode = 8 Then
+       If keycode = 8 Then
             For x = 0 To Me.dateLstBox.ListCount - 1
              If Me.dateLstBox.Selected(x) = True Then
                     Me.dateLstBox.RemoveItem (x)
@@ -55,11 +61,11 @@ Private Sub dateLstBox_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shi
     End If
 End Sub
 
-Private Sub inputDateTxt_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Private Sub inputDateTxt_KeyDown(ByVal keycode As MSForms.ReturnInteger, ByVal Shift As Integer)
     Dim testDateStr As String
     Dim testDate As Date
     
-     If Len(Me.inputDateTxt.value) > 1 And KeyCode = 13 Then
+     If Len(Me.inputDateTxt.value) > 1 And keycode = 13 Then
     
     If Not Me.inputDateTxt.value = "" Then
         testDateStr = validationHelper.birthdayExtract(Me.inputDateTxt.value)
@@ -78,18 +84,30 @@ Private Sub inputDateTxt_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal S
     
 End Sub
 
+Sub removeItemFromLst(xlstbox As Object, ByVal keycode As Long)
+     Dim x As Integer
+       If keycode = 8 Then
+            For x = 0 To xlstbox.ListCount - 1
+            If x = xlstbox.ListCount Then Exit Sub
+             If xlstbox.Selected(x) = True Then
+                    xlstbox.RemoveItem (x)
+                    x = x - 1
+             End If
+          Next x
+    End If
+End Sub
 
 
-Function getLstboxvalue(xlstBox As Object) As String
+Function getLstboxvalue(xlstbox As Object) As String
 
 
-    Size = Me.dateLstBox.ListCount - 1
+    Size = xlstbox.ListCount - 1
     ReDim ListBoxContents(0 To Size) As String
     
     Dim I As Integer
 
     For I = 0 To Size
-        ListBoxContents(I) = xlstBox.List(I)
+        ListBoxContents(I) = xlstbox.List(I)
     Next I
     
     return_str = Join(ListBoxContents, ",")
@@ -124,11 +142,24 @@ Private Sub reportTypeCbo_Change()
     End If
 End Sub
 
+
+
+Private Sub rowLstbox_KeyDown(ByVal keycode As MSForms.ReturnInteger, ByVal Shift As Integer)
+        removeItemFromLst Me.rowLstbox, keycode
+End Sub
+
+
+
 Private Sub submitBtn_Click()
     Dim day_rng_str As String
     Dim Size As Integer
     Dim exe_str As String
     Size = Me.dateLstBox.ListCount - 1
+    If Size < 0 Then
+        MsgBox "Please enter at least one day"
+        Me.inputDateTxt.BackColor = RGB(255, 255, 0)
+        Exit Sub
+    End If
     ReDim ListBoxContents(0 To Size) As String
     
     Dim I As Integer
@@ -143,8 +174,12 @@ Private Sub submitBtn_Click()
         
         Select Case Me.reportTypeCbo.value
             Case "By Employees"
-                exe_str = "custom_reports  --date " & Chr(34) & day_rng_str & Chr(34) & " --report_type " & "EMP_BY_DAY"
-                Debug.Print exe_str
+                If Size < 0 Then
+                    MsgBox "Please enter at least one day"
+                Else
+                    exe_str = "custom_reports  --date " & Chr(34) & day_rng_str & Chr(34) & " --report_type " & "EMP_BY_DAY"
+                    Call run_exe.run_exe(exe_str)
+                End If
             Case "Custom Report"
                 Dim rows_str As String
                 Dim col_str As String
@@ -154,7 +189,7 @@ Private Sub submitBtn_Click()
                 
                 exe_str = "custom_reports  --date " & Chr(34) & day_rng_str & Chr(34) & " --report_type " & "CUSTOM"
                 exe_str = exe_str + row_str + col_str
-                Debug.Print exe_str
+                Call run_exe.run_exe(exe_str)
                 
                 
         End Select
