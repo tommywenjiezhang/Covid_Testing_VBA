@@ -1,0 +1,6 @@
+﻿Private Sub Worksheet_Activate()
+    With Range("F1:F4")
+        .Style = "Input"
+    End With
+End Sub
+
