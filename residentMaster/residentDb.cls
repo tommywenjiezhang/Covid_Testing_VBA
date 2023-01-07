@@ -68,7 +68,7 @@ End Function
 
 Public Function insertResidents(ByVal residentName As String, birthday As Date, wingName As String, Optional roomNumber As String = "")
     
-    Dim qb As QueryInsert
+    Dim qb As New QueryInsert
     Dim query As String
     
     Dim conn As Object
@@ -77,7 +77,7 @@ Public Function insertResidents(ByVal residentName As String, birthday As Date, 
     
     qb.TableName = "resident"
     qb.InsertColumn "residentName", residentName
-    qb.InsertColumn "DOB", Format(birthday, "\#yyyy-mm-dd hh:nn:ss\#")
+    qb.InsertColumn "DOB", format(birthday, "\#yyyy-mm-dd hh:nn:ss\#")
     qb.InsertColumn "wings", wingName
     qb.InsertColumn "roomNum", roomNumber
     
@@ -94,8 +94,7 @@ End Function
 
 Public Function insertTesting(ByVal residentID As String, residentName As String, _
                                         timeTested As Date, residentWings As String, symptom As Boolean, _
-                                        typeOfTest As String, lotNumber As String, ByVal expirationDate As Date _
-                                        )
+                                        typeOfTest As String, lotNumber As String, ByVal expirationDate As Date, testKind As String, testReason As String)
                  Dim qb As New QueryInsert
                 Dim query As String
                 Dim expirationDateStr As String
@@ -108,21 +107,22 @@ Public Function insertTesting(ByVal residentID As String, residentName As String
                 qb.InsertColumn "residentName", residentName
                 
                 If symptom = True Then
-                    qb.InsertColumn "symptom", CStr(0)
-                Else
                     qb.InsertColumn "symptom", CStr(-1)
+                Else
+                    qb.InsertColumn "symptom", CStr(0)
                 End If
                 
-                qb.InsertColumn "timeTested", Format(timeTested, "\#yyyy-mm-dd hh:nn:ss\#")
+                qb.InsertColumn "timeTested", format(timeTested, "\#yyyy-mm-dd hh:nn:ss\#")
                 qb.InsertColumn "wings", residentWings
                 qb.InsertColumn "typeOfTest", typeOfTest
                 qb.InsertColumn "lotNumber", lotNumber
-                qb.InsertColumn "expirationDate", Format(expirationDate, "\#yyyy-mm-dd hh:nn:ss\#")
+                qb.InsertColumn "expirationDate", format(expirationDate, "\#yyyy-mm-dd hh:nn:ss\#")
+                qb.InsertColumn "TestKind", testKind
+                qb.InsertColumn "testReason", testReason
                 
                 With conn
                 .Open dbPath
                 query = qb.GetInsertCommandText
-                Debug.Print query
                 .Execute query
                 .Close
                 End With
@@ -153,12 +153,12 @@ Public Function insertResidentName(ByVal residentName As String, wings As String
     Set conn = Nothing
 End Function
 
-Function deleteResident(ByVal residentName As String)
+Function deleteResident(ByVal residentID As String)
     Dim conn As Object
     Dim query As String
     
     Set conn = CreateObject("ADODB.Connection")
-    query = "Delete * from resident where residentName = '" & residentName & "'"
+    query = "Delete * from resident where residentID = '" & residentID & "'"
     With conn
         .Open dbPath
         Debug.Print query

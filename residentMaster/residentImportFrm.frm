@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} residentImportFrm 
    Caption         =   "UserForm2"
-   ClientHeight    =   5118
+   ClientHeight    =   5112
    ClientLeft      =   48
-   ClientTop       =   390
-   ClientWidth     =   8070
+   ClientTop       =   396
+   ClientWidth     =   8076
    OleObjectBlob   =   "residentImportFrm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

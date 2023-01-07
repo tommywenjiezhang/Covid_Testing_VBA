@@ -29,26 +29,26 @@ Function SelectFile() As String
 End Function
 
 Sub updateEmpDatabase()
-    Dim fileName As String
-    fileName = SelectFile()
+    Dim filename As String
+    filename = SelectFile()
     
 
 End Sub
 
 Sub updateDatabase(ByVal wingName As String)
 Dim folderName As String
-Dim fileName As String
+Dim filename As String
 
 Dim name As String
 
-fileName = SelectFolder() & "\" & StrConv(wingName, vbProperCase) & ".xlsx"
+filename = SelectFolder() & "\" & StrConv(wingName, vbProperCase) & ".xlsx"
 
-If fs.FileExists(fileName) Then
-    openWorkbook fileName, wingName
+If fs.FileExists(filename) Then
+    openWorkbook filename, wingName
 Else
     MsgBox wingName & " can't be found. Please manually select the file"
-    fileName = SelectFile()
-    openWorkbook fileName, wingName
+    filename = SelectFile()
+    openWorkbook filename, wingName
     
 End If
 
@@ -58,7 +58,7 @@ End If
 End Sub
 
 
-Sub openWorkbook(ByVal fileName As String, wingName As String)
+Sub openWorkbook(ByVal filename As String, wingName As String)
     Dim wb As Workbook
     Dim lastRow As Long
     Dim copy_rng As Range
@@ -66,7 +66,7 @@ Sub openWorkbook(ByVal fileName As String, wingName As String)
     Dim residentName As String
     
     
-    Set wb = Workbooks.Open(fileName)
+    Set wb = Workbooks.Open(filename)
     db.deleteResidentByWing (wingName)
     With wb.Sheets(1)
         lastRow = .Cells(.Rows.Count, 2).End(xlUp).Row

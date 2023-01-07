@@ -16,11 +16,13 @@ Sub importName(ByVal wingsName As String)
     
     
     With residentList
+        .Unprotect
         last_row = .Cells(.Rows.Count, 1).End(xlUp).Row
         .Range("A2:A" & .Rows.Count).ClearContents
         .Range("B2:B" & .Rows.Count).ClearContents
         .Range("A1").value = "residentName"
         .Range("D3").value = wingsName
+       
     End With
     
     
@@ -38,7 +40,11 @@ Sub importName(ByVal wingsName As String)
         Next i
     
     End If
-    
+    residentList.Protect
+End Sub
+
+Sub resident_changes()
+    residentActionFrm.Show
 End Sub
 
 Sub importBirthday(ByVal birthday As Variant)
